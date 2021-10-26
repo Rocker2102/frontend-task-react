@@ -85,7 +85,8 @@ class UploadButton extends React.Component {
     };
 
     render () {
-        const inputBtnId = "audio-file";
+        const infoMsg = 'Select an audio file to proceed...';
+        const inputBtnId = 'audio-file';
 
         return (
             <Box sx={{
@@ -102,11 +103,14 @@ class UploadButton extends React.Component {
                                 style={{ display: 'none' }}
                                 onChange={this.handleFile}
                             />
-                            <Button variant="outlined" component="span" startIcon={<AudioIcon />}>
+                            <Button variant="outlined" component="span" startIcon={<AudioIcon />}
+                                size="large"
+                            >
                                 Select Audio File
                             </Button>
                         </label>
                         <Button type="submit" component="button" variant="contained"
+                            size="large"
                             color="success"
                             endIcon={<BackupIcon />}
                             disabled={this.state.file === null ? true : false}
@@ -114,6 +118,10 @@ class UploadButton extends React.Component {
                             Upload
                         </Button>
                     </Stack>
+
+                    <Typography variant="subtitle1" mt={1} align="center">
+                        {this.state.file === null ? infoMsg : ''}
+                    </Typography>
 
                     <DisplayFileInfo file={this.state.file} removeFile={this.removeFile} />
                 </form>
