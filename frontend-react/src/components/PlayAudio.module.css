@@ -1,0 +1,19 @@
+.waveForm {
+    border-bottom: 1px solid black;
+    margin-top: 50vh;
+}
+.timer {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0.5rem;
+}
+
+.uiControls {
+    display: flex;
+    justify-content: flex-start;
+    margin: 1rem 0.5rem;
+}
+
+.btn {
+    padding: 0.4em 0.8em;
+}
