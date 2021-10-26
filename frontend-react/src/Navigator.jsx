@@ -36,7 +36,7 @@ export default class Navigator extends React.Component {
             <div>
                 <Router>
                     <Switch>
-                        <Route path="/upload-file">
+                        <Route exact path="/">
                             <UploadButton setFileName={this.setFileName} setAudioFile={this.setAudioFile} />
                         </Route>
                         <Route path="/play-audio">
