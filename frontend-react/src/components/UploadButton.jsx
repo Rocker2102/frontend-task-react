@@ -2,9 +2,37 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import AudioIcon from '@mui/icons-material/AudiotrackRounded';
+import Typography from '@mui/material/Typography';
 import BackupIcon from '@mui/icons-material/BackupRounded';
+import AudioIcon from '@mui/icons-material/AudiotrackRounded';
 import { withRouter } from 'react-router';
+
+import { formatFileSize } from '../shared/utils';
+
+function DisplayFileInfo({ file }) {
+    if (! file) { return null }
+
+    return (
+        <Box sx={{
+            dispay: 'flex',
+            marginTop: '12px',
+            alignItems: 'flex-start',
+         }}>
+            <Typography variant="h5">
+                Information about current file
+            </Typography>
+            <Typography variant="subtitle1">
+                <strong>Name: </strong> {file.name}
+            </Typography>
+            <Typography variant="subtitle1">
+                <strong>Size: </strong> {formatFileSize(file.size)}
+            </Typography>
+            <Typography variant="subtitle1">
+                <strong>Type: </strong> {file.type}
+            </Typography>
+        </Box>
+    );
+}
 
 class UploadButton extends React.Component {
     constructor (props) {
@@ -34,6 +62,8 @@ class UploadButton extends React.Component {
     };
 
     render () {
+        const inputBtnId = "audio-file";
+
         return (
             <Box sx={{
                 display: 'flex',
@@ -43,14 +73,14 @@ class UploadButton extends React.Component {
              }}>
                 <form onSubmit={this.onSubmit}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <label htmlFor="contained-button-file">
+                        <label htmlFor={inputBtnId}>
                             <input accept=".mp3, .wav, .aac, .wma, .m4a"
-                                id="contained-button-file" type="file"
+                                id={inputBtnId} type="file"
                                 style={{ display: 'none' }}
                                 onChange={this.handleFile}
                             />
                             <Button variant="outlined" component="span" startIcon={<AudioIcon />}>
-                                Select Audio
+                                Select Audio File
                             </Button>
                         </label>
                         <Button type="submit" component="button" variant="contained"
@@ -61,6 +91,8 @@ class UploadButton extends React.Component {
                             Upload
                         </Button>
                     </Stack>
+
+                    <DisplayFileInfo file={this.state.file} />
                 </form>
             </Box>
         );
