@@ -1,5 +1,5 @@
-import React from "react";
-import { withRouter } from "react-router";
+import React from 'react';
+import { withRouter } from 'react-router';
 
 class UploadButton extends React.Component {
     constructor (props) {
@@ -23,15 +23,15 @@ class UploadButton extends React.Component {
         this.props.setFileName(this.state.file.name);
         this.props.setAudioFile(this.state.file);
 
-        this.props.history.push("/play-audio");
+        this.props.history.push('/play-audio');
     };
 
     render () {
         return (
             <div>
-                <form onSubmit={this.onSubmit} style={{ marginBottom: "5px" }}>
-                    <input type='file' onChange={this.handleFile} />
-                    <button type='submit'>Upload audio</button>
+                <form onSubmit={this.onSubmit} style={{ marginBottom: '5px' }}>
+                    <input type="file" onChange={this.handleFile} />
+                    <button type="submit">Upload audio</button>
                 </form>
             </div>
         );

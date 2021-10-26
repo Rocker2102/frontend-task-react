@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import {
     Route,
     Switch,
     BrowserRouter as Router
-} from "react-router-dom";
-import PlayAudio from "./components/PlayAudio";
-import UploadButton from "./components/UploadButton";
+} from 'react-router-dom';
+import PlayAudio from './components/PlayAudio';
+import UploadButton from './components/UploadButton';
 
 export default class Navigator extends React.Component {
     constructor() {
@@ -36,10 +36,10 @@ export default class Navigator extends React.Component {
             <div>
                 <Router>
                     <Switch>
-                        <Route exact path="/">
+                        <Route exact path='/'>
                             <UploadButton setFileName={this.setFileName} setAudioFile={this.setAudioFile} />
                         </Route>
-                        <Route path="/play-audio">
+                        <Route path='/play-audio'>
                             <PlayAudio fileName={this.state.fileName} audioFile={this.state.audioFile} />
                         </Route>
                     </Switch>
