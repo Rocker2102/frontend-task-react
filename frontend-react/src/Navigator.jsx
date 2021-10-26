@@ -1,11 +1,7 @@
 import React from 'react';
-import {
-    Route,
-    Switch,
-    BrowserRouter as Router
-} from 'react-router-dom';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import PlayAudio from './components/PlayAudio';
-import UploadButton from './components/UploadButton';
+import UploadForm from './components/UploadForm';
 
 export default class Navigator extends React.Component {
     constructor() {
@@ -37,7 +33,7 @@ export default class Navigator extends React.Component {
                 <Router>
                     <Switch>
                         <Route exact path='/'>
-                            <UploadButton setFileName={this.setFileName} setAudioFile={this.setAudioFile} />
+                            <UploadForm setFileName={this.setFileName} setAudioFile={this.setAudioFile} />
                         </Route>
                         <Route path='/play-audio'>
                             <PlayAudio fileName={this.state.fileName} audioFile={this.state.audioFile} />
