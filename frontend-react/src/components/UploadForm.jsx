@@ -3,13 +3,14 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/CloseRounded';
 import BackupIcon from '@mui/icons-material/BackupRounded';
 import AudioIcon from '@mui/icons-material/AudiotrackRounded';
 import { withRouter } from 'react-router';
 
 import { formatFileSize } from '../shared/utils';
 
-function DisplayFileInfo({ file }) {
+function DisplayFileInfo({ file, removeFile }) {
     if (! file) { return null }
 
     return (
@@ -30,6 +31,21 @@ function DisplayFileInfo({ file }) {
             <Typography variant="subtitle1">
                 <strong>Type: </strong> {file.type}
             </Typography>
+
+            <Button
+                type="button"
+                color="error"
+                variant="outlined"
+                component="button"
+                fullWidth
+                sx={{
+                    marginTop: '8px'
+                }}
+                onClick={removeFile}
+                startIcon={<CloseIcon />}
+            >
+                Remove File
+            </Button>
         </Box>
     );
 }
@@ -47,6 +63,13 @@ class UploadButton extends React.Component {
         this.setState({
             ...this.state,
             file: e.target.files[0] ?? null
+        });
+    }
+
+    removeFile = () => {
+        this.setState({
+            ...this.state,
+            file: null
         });
     }
 
@@ -92,7 +115,7 @@ class UploadButton extends React.Component {
                         </Button>
                     </Stack>
 
-                    <DisplayFileInfo file={this.state.file} />
+                    <DisplayFileInfo file={this.state.file} removeFile={this.removeFile} />
                 </form>
             </Box>
         );
