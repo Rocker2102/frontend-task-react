@@ -49,7 +49,7 @@ export default class PlayAudio extends React.Component {
                 {
                     time: PlayAudio.waveSurfer.getCurrentTime(),
                     remark,
-                    audioName: this.props.audioFile.name
+                    audioName: this.props.audioFile?.name
                 }
             ]
         });
@@ -100,7 +100,7 @@ export default class PlayAudio extends React.Component {
         const emptyList = <div>No notes added for this audio!</div>;
 
         if (this.state.notes.length !== 0) {
-            const notesList = this.state.notes.filter((note) => note.audioName === this.props.audioFile.name);
+            const notesList = this.state.notes.filter((note) => note.audioName === this.props.audioFile?.name);
 
             if (notesList.length === 0) { return emptyList }
 
@@ -122,6 +122,8 @@ export default class PlayAudio extends React.Component {
             waveColor: 'violet',
             progressColor: 'purple'
         });
+
+        if (typeof this.props.audioFile?.name !== 'string') { return }
 
         PlayAudio.waveSurfer.loadBlob(this.props.audioFile);
 
