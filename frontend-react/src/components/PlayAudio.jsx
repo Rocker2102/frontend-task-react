@@ -41,6 +41,7 @@ export default class PlayAudio extends React.Component {
 
         if (!remark || remark === '') { return }
 
+        console.log(this.state);
         this.setState({
             ...this.state,
             notes: [
@@ -48,10 +49,11 @@ export default class PlayAudio extends React.Component {
                 {
                     time: PlayAudio.waveSurfer.getCurrentTime(),
                     remark,
-                    audioName: this.props.fileName
+                    audioName: this.props.audioFile.name
                 }
             ]
         });
+        console.log(this.state);
 
         window.localStorage.setItem('notes', JSON.stringify(this.state.notes));
     }
@@ -96,7 +98,7 @@ export default class PlayAudio extends React.Component {
 
     notesList = () => {
         if (this.state.notes.length !== 0) {
-            const notesList = this.state.notes.filter((note) => note.audioName === this.props.fileName);
+            const notesList = this.state.notes.filter((note) => note.audioName === this.props.audioFile.name);
 
             return (
                 <div>

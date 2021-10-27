@@ -8,16 +8,8 @@ export default class Navigator extends React.Component {
         super();
 
         this.state = {
-            fileName: null,
             audioFile: null
         };
-    }
-
-    setFileName = (fileName) => {
-        this.setState({
-            ...this.state,
-            fileName
-        });
     }
 
     setAudioFile = (audioFile) => {
@@ -32,10 +24,10 @@ export default class Navigator extends React.Component {
             <Router>
                 <Switch>
                     <Route exact path='/'>
-                        <UploadForm setFileName={this.setFileName} setAudioFile={this.setAudioFile} />
+                        <UploadForm setAudioFile={this.setAudioFile} />
                     </Route>
                     <Route path='/play-audio'>
-                        <PlayAudio fileName={this.state.fileName} audioFile={this.state.audioFile} />
+                        <PlayAudio audioFile={this.state.audioFile} />
                     </Route>
                 </Switch>
             </Router>

@@ -82,7 +82,6 @@ class UploadButton extends React.Component {
 
         if (! this.state.file) { return }
 
-        this.props.setFileName(this.state.file.name);
         this.props.setAudioFile(this.state.file);
 
         this.props.history.push('/play-audio');
