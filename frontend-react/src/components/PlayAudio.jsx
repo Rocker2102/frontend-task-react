@@ -282,7 +282,7 @@ export default class PlayAudio extends React.Component {
                         currentTheme={this.state.theme} toggleTheme={this.toggleTheme}
                     />
 
-                    <Container sx={{ marginTop: '2em' }}>
+                    <Container sx={{ marginTop: '2em', marginBottom: '20px' }}>
                         <Paper elevation={0} sx={{ padding: '2em 1em 0.6em 1em' }}>
                             <Box sx={{
                                 borderBottom: '1px solid black',

@@ -70,10 +70,10 @@ export default class ShowNotes extends React.PureComponent {
 
         return (
             <Paper elevation={8} sx={{
-                margin: '0 1em',
+                margin: '0 1em 20px 1em',
                 padding: '1em',
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'column'
             }}>
                 <Typography variant="h5">
                     Notes you add will appear here
