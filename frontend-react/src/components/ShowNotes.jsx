@@ -32,6 +32,50 @@ export default class ShowNotes extends React.PureComponent {
 
     render() {
         const iconStyle = { marginLeft: '2px' };
+        const emptyList = <Typography variant="subtitle1" color="error"
+            sx={{
+                marginTop: '1em'
+            }}
+        >
+            No notes to display!
+        </Typography>;
+
+        const noteList = <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            {this.props.notes.map(note => {
+                return (
+                    <ListItem key={note.time} secondaryAction={
+                        <div>
+                            <Tooltip title="Resume from here" placement="top">
+                                <IconButton color="success" edge="end" style={iconStyle}
+                                    onClick={() => this.props.resumeFromTime(note)}
+                                >
+                                    <PlayCircleIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <IconButton edge="end" style={iconStyle} disabled>
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton color="error" style={iconStyle} edge="end"
+                                onClick={() => this.props.removeNote(note)}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </div>
+                    }>
+                        <ListItemAvatar>
+                            <Avatar>
+                                {this.getRandomIcon()}
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={note.remark} secondary={formatTime(note.time)}
+                            sx={{
+                                textTransform: 'capitalize'
+                            }}
+                        />
+                    </ListItem>
+                );
+            })}
+        </List>;
 
         return (
             <Paper elevation={8} sx={{
@@ -44,45 +88,10 @@ export default class ShowNotes extends React.PureComponent {
                     Notes you add will appear here
                 </Typography>
                 <Typography variant="subtitle1">
-                    Click on the waveform to add a note at that particular timestamp
+                    Click on the waveform to add a note at that particular timestamp.
                 </Typography>
 
-                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                    {this.props.notes.map(note => {
-                        return (
-                            <ListItem key={note.time} secondaryAction={
-                                <div>
-                                    <Tooltip title="Resume from here" placement="top">
-                                        <IconButton color="success" edge="end" style={iconStyle}
-                                            onClick={() => this.props.resumeFromTime(note)}
-                                        >
-                                            <PlayCircleIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <IconButton edge="end" style={iconStyle} disabled>
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton color="error" style={iconStyle} edge="end"
-                                        onClick={() => this.props.removeNote(note)}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </div>
-                            }>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        {this.getRandomIcon()}
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={note.remark} secondary={formatTime(note.time)}
-                                    sx={{
-                                        textTransform: 'capitalize'
-                                    }}
-                                />
-                            </ListItem>
-                        );
-                    })}
-                </List>
+                {this.props.notes.length === 0 ? emptyList : noteList}
             </Paper>
         );
     }
