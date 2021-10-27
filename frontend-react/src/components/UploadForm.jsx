@@ -51,6 +51,8 @@ function DisplayFileInfo({ file, removeFile }) {
 }
 
 class UploadButton extends React.Component {
+    inputBtnId = 'audio-file';
+
     constructor (props) {
         super(props);
 
@@ -71,6 +73,8 @@ class UploadButton extends React.Component {
             ...this.state,
             file: null
         });
+
+        window.document.getElementById(this.inputBtnId).value = null;
     }
 
     onSubmit = (e) => {
@@ -84,9 +88,20 @@ class UploadButton extends React.Component {
         this.props.history.push('/play-audio');
     };
 
+    getFormStyles = (file) => {
+        if (! file) { return { } }
+
+        return {
+            border: '2px solid rgba(0, 0, 0, 0.2)',
+            margin: '1em',
+            padding: '3em 2em',
+            borderRadius: '0.4em',
+            boxShadow: '6px 5px rgba(0, 0, 0, 0.07)'
+        };
+    }
+
     render () {
         const infoMsg = 'Select an audio file to proceed...';
-        const inputBtnId = 'audio-file';
 
         return (
             <Box sx={{
@@ -95,11 +110,13 @@ class UploadButton extends React.Component {
                 alignItems: 'center',
                 justifyContent: 'center'
              }}>
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSubmit}
+                    style={{...this.getFormStyles(this.state.file), transition: "all 0.3s ease"}}
+                >
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <label htmlFor={inputBtnId}>
+                        <label htmlFor={this.inputBtnId}>
                             <input accept=".mp3, .wav, .aac, .wma, .m4a"
-                                id={inputBtnId} type="file"
+                                id={this.inputBtnId} type="file"
                                 style={{ display: 'none' }}
                                 onChange={this.handleFile}
                             />
