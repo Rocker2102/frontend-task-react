@@ -12,22 +12,13 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import EditIcon from '@mui/icons-material/EditRounded';
 import DeleteIcon from '@mui/icons-material/DeleteForeverRounded';
 import NoteAltIcon from '@mui/icons-material/NoteAltRounded';
-import StickyNoteIcon from '@mui/icons-material/StickyNote2Rounded';
 import PlayCircleIcon from '@mui/icons-material/PlayCircleRounded';
-import DescriptionIcon from '@mui/icons-material/DescriptionRounded';
-import TextSnipperIcon from '@mui/icons-material/TextSnippetRounded';
 
 import { formatTime } from '../shared/utils';
 
 export default class ShowNotes extends React.PureComponent {
     constructor(props) {
         super(props);
-    }
-
-    getRandomIcon = () => {
-        const icons = [ <NoteAltIcon />, <StickyNoteIcon />, <DescriptionIcon />,
-            <TextSnipperIcon/> ];
-        return icons[Math.floor(Math.random() * 10) % icons.length];
     }
 
     render() {
@@ -64,7 +55,7 @@ export default class ShowNotes extends React.PureComponent {
                     }>
                         <ListItemAvatar>
                             <Avatar>
-                                {this.getRandomIcon()}
+                                <NoteAltIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText primary={note.remark} secondary={formatTime(note.time)}
