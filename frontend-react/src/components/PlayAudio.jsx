@@ -337,10 +337,10 @@ export default class PlayAudio extends React.Component {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.handleNoteModalClose}>
+                            <Button id="closeNoteModal" onClick={this.handleNoteModalClose} component="button">
                                 Cancel
                             </Button>
-                            <Button onClick={this.addNote}>Add Note</Button>
+                            <Button onClick={() => this.addNote()}>Add Note</Button>
                         </DialogActions>
                     </Dialog>
 
