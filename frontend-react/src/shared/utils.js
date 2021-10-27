@@ -11,7 +11,7 @@ export const formatTime = (seconds) => {
     str += (_seconds < 10 ? '0' + _seconds : _seconds);
 
     return str;
-}
+};
 
 export const formatFileSize = (bytes, precision = 2) => {
     if (bytes === 0) { return '0 Bytes' }
@@ -19,4 +19,4 @@ export const formatFileSize = (bytes, precision = 2) => {
     const k = 1024, sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
         i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(precision)) + ' ' + sizes[i];
-}
+};
