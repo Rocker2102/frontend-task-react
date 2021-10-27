@@ -29,18 +29,16 @@ export default class Navigator extends React.Component {
 
     render () {
         return (
-            <div>
-                <Router>
-                    <Switch>
-                        <Route exact path='/'>
-                            <UploadForm setFileName={this.setFileName} setAudioFile={this.setAudioFile} />
-                        </Route>
-                        <Route path='/play-audio'>
-                            <PlayAudio fileName={this.state.fileName} audioFile={this.state.audioFile} />
-                        </Route>
-                    </Switch>
-                </Router>
-            </div>
+            <Router>
+                <Switch>
+                    <Route exact path='/'>
+                        <UploadForm setFileName={this.setFileName} setAudioFile={this.setAudioFile} />
+                    </Route>
+                    <Route path='/play-audio'>
+                        <PlayAudio fileName={this.state.fileName} audioFile={this.state.audioFile} />
+                    </Route>
+                </Switch>
+            </Router>
         );
     }
 }
