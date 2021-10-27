@@ -1,16 +1,20 @@
 import React from 'react';
-import Container from '@mui/material/Container';
 
 import Fab from '@mui/material/Fab';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
 import Slider from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import PauseIcon from '@mui/icons-material/PauseRounded';
 import PlayIcon from '@mui/icons-material/PlayArrowRounded';
+import PauseIcon from '@mui/icons-material/PauseRounded';
+import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
 import VolumeUpIcon from '@mui/icons-material/VolumeUpOutlined';
 import VolumeOffIcon from '@mui/icons-material/VolumeOffOutlined';
+
+import TopMenu from './TopMenu';
 
 import WaveSurfer from 'wavesurfer.js';
 import style from './PlayAudio.module.css';
@@ -94,6 +98,7 @@ export default class PlayAudio extends React.Component {
     toggleAudioPlayback = () => {
         if (PlayAudio.waveSurfer === null) { return }
 
+        const refreshRate = 500;
         PlayAudio.waveSurfer.playPause();
 
         if (PlayAudio.waveSurfer.isPlaying()) {
@@ -113,7 +118,7 @@ export default class PlayAudio extends React.Component {
                         currentTime: PlayAudio.waveSurfer.getCurrentTime()
                     }
                 });
-            }, 500);
+            }, refreshRate);
 
             return;
         }
@@ -157,12 +162,14 @@ export default class PlayAudio extends React.Component {
         }
 
         PlayAudio.waveSurfer.setVolume(value / this.maxAudioSteps);
+        PlayAudio.waveSurfer.setMute(false);
 
         this.setState({
             ...this.state,
             audio: {
                 ...this.state.audio,
-                volume: value
+                volume: value,
+                isMute: false
             }
         });
     }
@@ -189,78 +196,110 @@ export default class PlayAudio extends React.Component {
                     currentTime: 0
                 }
             });
+        });
 
-            PlayAudio.waveSurfer.on('seek', () => {
-                this.setState({
-                    ...this.state,
-                    audio: {
-                        ...this.state.audio,
-                        currentTime: PlayAudio.waveSurfer.getCurrentTime()
-                    }
-                });
+        PlayAudio.waveSurfer.on('seek', () => {
+            this.setState({
+                ...this.state,
+                audio: {
+                    ...this.state.audio,
+                    currentTime: PlayAudio.waveSurfer.getCurrentTime()
+                }
+            });
 
-                this.addNote();
+            this.addNote();
+        });
+
+        PlayAudio.waveSurfer.on('error', () => {
+            console.log('An error occurred!');
+        });
+
+        PlayAudio.waveSurfer.on('finish', () => {
+            console.log('Audio clip finished!');
+
+            this.setState({
+                ...this.state,
+                audio: {
+                    ...this.state.audio,
+                    isPlaying: false,
+                    currentTime: 0
+                }
             });
         });
     }
 
+    componentWillUnmount () {
+        clearInterval(this.audioInterval);
+        PlayAudio.waveSurfer?.destroy();
+    }
+
     render () {
         return (
-            <Container sx={{ marginTop: '2em' }}>
-                <div>
-                    <div id="waveform"></div>
-                </div>
+            <Box>
+                <TopMenu title={this.props.audioFile?.name} />
 
-                <div className={style.timer} style={{ marginBottom: '2em' }}>
-                    <div>00:00</div>
-                    <div>
-                        { this.state.audio.currentTime == null
-                            ? 'Loading ...'
-                            : this.displayTimer(this.state.audio.currentTime) }
-                    </div>
-                    <div>
-                        {this.displayTimer(this.state.audio.duration, '00:00')}
-                    </div>
-                </div>
+                <Container sx={{ marginTop: '2em' }}>
+                    <Paper elevation={0} sx={{ padding: '2em 1em', marginBottom: '1em' }}>
+                        <Box sx={{
+                            borderBottom: '1px solid black',
+                            marginBottom: '2px'
+                        }}>
+                            <div id="waveform"></div>
+                        </Box>
 
-                <Grid container sx={{ display: 'flex',
-                    justifyContent: 'space-between', alignItems: 'center',
-                    marginBottom: '2em'
-                }}>
-                    <Grid item xs={4}>
-                        <Fab color="secondary" size="large"
-                            onClick={this.toggleAudioPlayback}
-                        >
-                            {
-                                this.state.audio.isPlaying
-                                    ? <PauseIcon fontSize="large" />
-                                    : <PlayIcon fontSize="large" />
-                            }
-                        </Fab>
+                        <div className={style.timer}>
+                            <div>00:00</div>
+                            <div>
+                                { this.state.audio.currentTime == null
+                                    ? 'Loading ...'
+                                    : this.displayTimer(this.state.audio.currentTime) }
+                            </div>
+                            <div>
+                                {this.displayTimer(this.state.audio.duration, '00:00')}
+                            </div>
+                        </div>
+                    </Paper>
+
+                    <Grid container sx={{ display: 'flex',
+                        justifyContent: 'space-between', alignItems: 'center',
+                        padding: '0 1em',
+                        marginBottom: '2em'
+                    }}>
+                        <Grid item xs={4}>
+                            <Fab color="secondary" size="large"
+                                onClick={this.toggleAudioPlayback}
+                            >
+                                {
+                                    this.state.audio.isPlaying
+                                        ? <PauseIcon fontSize="large" />
+                                        : <PlayIcon fontSize="large" />
+                                }
+                            </Fab>
+                        </Grid>
+
+                        <Grid item md={3} xs={5}>
+                            <Stack direction="row" alignItems="center"
+                                spacing={{ xs: 0, lg: 0.5 }} justifyContent='flex-end'
+                            >
+                                <Tooltip title="Toggle Mute" placement="left">
+                                    <IconButton color="primary" onClick={this.toggleMute}>
+                                        {this.state.audio.isMute ? <VolumeOffIcon /> : <VolumeUpIcon />}
+                                    </IconButton>
+                                </Tooltip>
+
+                                <Slider size="small"
+                                    min={0} max={this.maxAudioSteps} step={1}
+                                    value={this.state.audio.volume}
+                                    onChange={this.handleVolumeChange}
+                                    valueLabelDisplay="auto"
+                                />
+                            </Stack>
+                        </Grid>
                     </Grid>
 
-                    <Grid item md={3} xs={5}>
-                        <Stack direction="row" alignItems="center"
-                            spacing={{ xs: 0, lg: 0.5 }} justifyContent='flex-end'
-                        >
-                            <Tooltip title="Toggle Mute" placement="left">
-                                <IconButton color="primary" onClick={this.toggleMute}>
-                                    {this.state.audio.isMute ? <VolumeOffIcon /> : <VolumeUpIcon />}
-                                </IconButton>
-                            </Tooltip>
-
-                            <Slider size="small"
-                                min={0} max={this.maxAudioSteps} step={1}
-                                value={this.state.audio.volume}
-                                onChange={this.handleVolumeChange}
-                                valueLabelDisplay="auto"
-                            />
-                        </Stack>
-                    </Grid>
-                </Grid>
-
-                {this.notesList()}
-            </Container>
+                    {this.notesList()}
+                </Container>
+            </Box>
         );
     }
 }
