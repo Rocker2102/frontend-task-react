@@ -17,7 +17,6 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOffOutlined';
 import TopMenu from './TopMenu';
 
 import WaveSurfer from 'wavesurfer.js';
-import style from './PlayAudio.module.css';
 
 import { formatTime } from '../shared/utils';
 
@@ -247,7 +246,7 @@ export default class PlayAudio extends React.Component {
                             <div id="waveform"></div>
                         </Box>
 
-                        <div className={style.timer}>
+                        <div style={{ display: 'flex', jsutifyContent: 'space-between' }}>
                             <div>00:00</div>
                             <div>
                                 { this.state.audio.currentTime == null
