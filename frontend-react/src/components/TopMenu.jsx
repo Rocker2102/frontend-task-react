@@ -37,8 +37,9 @@ export default class TopMenu extends React.Component {
 
                         <IconButton
                             color="inherit"
+                            onClick={this.props.toggleTheme}
                         >
-                            {'fhjkad' === 'dark'
+                            {this.props.currentTheme === 'dark'
                                 ? <Brightness7Icon />
                                 : <Brightness4Icon />
                             }

@@ -1,5 +1,8 @@
 import React from 'react';
 
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
+
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -47,8 +50,31 @@ export default class PlayAudio extends React.Component {
                 duration: 0,
                 isPlaying: false,
                 currentTime: null
-            }
+            },
+            theme: 'light'
         };
+    }
+
+    getTheme = (mode) => {
+        return createTheme({
+            palette: {
+                mode: mode
+            }
+        });
+    }
+
+    toggleTheme = () => {
+        if (this.state.theme === 'light') {
+            this.setState({
+                ...this.state,
+                theme: 'dark'
+            });
+        } else {
+            this.setState({
+                ...this.state,
+                theme: 'light'
+            });
+        }
     }
 
     displayTimer = (val, defVal = 'Loading ...') => {
@@ -248,74 +274,80 @@ export default class PlayAudio extends React.Component {
 
     render () {
         return (
-            <Box>
-                <TopMenu title={this.props.audioFile?.name} />
+            <ThemeProvider theme={this.getTheme(this.state.theme)}>
+                <CssBaseline />
 
-                <Container sx={{ marginTop: '2em' }}>
-                    <Paper elevation={0} sx={{ padding: '2em 1em 0.6em 1em' }}>
-                        <Box sx={{
-                            borderBottom: '1px solid black',
-                            marginBottom: '2px'
-                        }}>
-                            <div id="waveform"></div>
-                        </Box>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <div>00:00</div>
-                            <div>
-                                { this.state.audio.currentTime == null
-                                    ? 'Loading ...'
-                                    : this.displayTimer(this.state.audio.currentTime) }
-                            </div>
-                            <div>
-                                {this.displayTimer(this.state.audio.duration, '00:00')}
-                            </div>
-                        </div>
-                    </Paper>
-
-                    <Grid container sx={{ display: 'flex',
-                        justifyContent: 'space-between', alignItems: 'center',
-                        padding: '0 1em',
-                        marginBottom: '2em'
-                    }}>
-                        <Grid item xs={4}>
-                            <Fab color="secondary" size="large"
-                                onClick={this.toggleAudioPlayback}
-                            >
-                                {
-                                    this.state.audio.isPlaying
-                                        ? <PauseIcon fontSize="large" />
-                                        : <PlayIcon fontSize="large" />
-                                }
-                            </Fab>
-                        </Grid>
-
-                        <Grid item md={3} xs={5}>
-                            <Stack direction="row" alignItems="center"
-                                spacing={{ xs: 0, lg: 0.5 }} justifyContent='flex-end'
-                            >
-                                <Tooltip title="Toggle Mute" placement="left">
-                                    <IconButton color="primary" onClick={this.toggleMute}>
-                                        {this.state.audio.isMute ? <VolumeOffIcon /> : <VolumeUpIcon />}
-                                    </IconButton>
-                                </Tooltip>
-
-                                <Slider size="small"
-                                    min={0} max={this.maxAudioSteps} step={1}
-                                    value={this.state.audio.volume}
-                                    onChange={this.handleVolumeChange}
-                                    valueLabelDisplay="auto"
-                                />
-                            </Stack>
-                        </Grid>
-                    </Grid>
-
-                    <ShowNotes
-                        notes={this.notesList()} resumeFromTime={this.resumeFromTime}
-                        removeNote={this.removeNote}
+                <Box>
+                    <TopMenu title={this.props.audioFile?.name}
+                        currentTheme={this.state.theme} toggleTheme={this.toggleTheme}
                     />
-                </Container>
-            </Box>
+
+                    <Container sx={{ marginTop: '2em' }}>
+                        <Paper elevation={0} sx={{ padding: '2em 1em 0.6em 1em' }}>
+                            <Box sx={{
+                                borderBottom: '1px solid black',
+                                marginBottom: '2px'
+                            }}>
+                                <div id="waveform"></div>
+                            </Box>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <div>00:00</div>
+                                <div>
+                                    { this.state.audio.currentTime == null
+                                        ? 'Loading ...'
+                                        : this.displayTimer(this.state.audio.currentTime) }
+                                </div>
+                                <div>
+                                    {this.displayTimer(this.state.audio.duration, '00:00')}
+                                </div>
+                            </div>
+                        </Paper>
+
+                        <Grid container sx={{ display: 'flex',
+                            justifyContent: 'space-between', alignItems: 'center',
+                            padding: '0 1em',
+                            marginBottom: '2em'
+                        }}>
+                            <Grid item xs={4}>
+                                <Fab color="secondary" size="large"
+                                    onClick={this.toggleAudioPlayback}
+                                >
+                                    {
+                                        this.state.audio.isPlaying
+                                            ? <PauseIcon fontSize="large" />
+                                            : <PlayIcon fontSize="large" />
+                                    }
+                                </Fab>
+                            </Grid>
+
+                            <Grid item md={3} xs={5}>
+                                <Stack direction="row" alignItems="center"
+                                    spacing={{ xs: 0, lg: 0.5 }} justifyContent='flex-end'
+                                >
+                                    <Tooltip title="Toggle Mute" placement="left">
+                                        <IconButton color="primary" onClick={this.toggleMute}>
+                                            {this.state.audio.isMute ? <VolumeOffIcon /> : <VolumeUpIcon />}
+                                        </IconButton>
+                                    </Tooltip>
+
+                                    <Slider size="small"
+                                        min={0} max={this.maxAudioSteps} step={1}
+                                        value={this.state.audio.volume}
+                                        onChange={this.handleVolumeChange}
+                                        valueLabelDisplay="auto"
+                                    />
+                                </Stack>
+                            </Grid>
+                        </Grid>
+
+                        <ShowNotes
+                            notes={this.notesList()} resumeFromTime={this.resumeFromTime}
+                            removeNote={this.removeNote}
+                        />
+                    </Container>
+                </Box>
+            </ThemeProvider>
         );
     }
 }
