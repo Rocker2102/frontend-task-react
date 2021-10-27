@@ -52,14 +52,18 @@ export default class ShowNotes extends React.PureComponent {
                             <ListItem key={note.time} secondaryAction={
                                 <div>
                                     <Tooltip title="Resume from here" placement="top">
-                                        <IconButton color="success" edge="end" style={iconStyle}>
+                                        <IconButton color="success" edge="end" style={iconStyle}
+                                            onClick={() => this.props.resumeFromTime(note)}
+                                        >
                                             <PlayCircleIcon />
                                         </IconButton>
                                     </Tooltip>
                                     <IconButton edge="end" style={iconStyle} disabled>
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton color="error" style={iconStyle} edge="end">
+                                    <IconButton color="error" style={iconStyle} edge="end"
+                                        onClick={() => this.props.removeNote(note)}
+                                    >
                                         <DeleteIcon />
                                     </IconButton>
                                 </div>

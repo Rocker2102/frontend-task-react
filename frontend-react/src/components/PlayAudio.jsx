@@ -21,8 +21,8 @@ import WaveSurfer from 'wavesurfer.js';
 
 import { formatTime } from '../shared/utils';
 
-const getLocalItems = () => {
-    const list = window.localStorage.getItem('notes');
+const getLocalItems = (key) => {
+    const list = window.localStorage.getItem(key);
 
     if (list) { return JSON.parse(list) }
 
@@ -32,6 +32,7 @@ const getLocalItems = () => {
 export default class PlayAudio extends React.Component {
     static waveSurfer = null;
 
+    lsKey = 'notes';
     maxAudioSteps = 15;
     audioInterval = undefined;
 
@@ -39,7 +40,7 @@ export default class PlayAudio extends React.Component {
         super(props);
 
         this.state = {
-            notes: getLocalItems(),
+            notes: getLocalItems(this.lsKey),
             audio: {
                 volume: 4,
                 isMute: false,
@@ -73,7 +74,7 @@ export default class PlayAudio extends React.Component {
             ]
         });
 
-        window.localStorage.setItem('notes', JSON.stringify(this.state.notes));
+        window.localStorage.setItem(this.lsKey, JSON.stringify(this.state.notes));
     }
 
     toggleMute = () => {
@@ -144,6 +145,26 @@ export default class PlayAudio extends React.Component {
         }
 
         return [];
+    }
+
+    removeNote = (noteData) => {
+        const newNotes = this.state.notes.filter(note => {
+            if (note.audioName === noteData.audioName && note.time === noteData.time) {
+                return false;
+            }
+            return true;
+        });
+
+        this.setState({
+            ...this.state,
+            notes: newNotes
+        });
+
+        window.localStorage.setItem(this.lsKey, JSON.stringify(newNotes));
+    }
+
+    resumeFromTime = (note) => {
+        console.log(note);
     }
 
     handleVolumeChange = (e, value) => {
@@ -289,7 +310,10 @@ export default class PlayAudio extends React.Component {
                         </Grid>
                     </Grid>
 
-                    <ShowNotes notes={this.notesList()} />
+                    <ShowNotes
+                        notes={this.notesList()} resumeFromTime={this.resumeFromTime}
+                        removeNote={this.removeNote}
+                    />
                 </Container>
             </Box>
         );
