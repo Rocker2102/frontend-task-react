@@ -31,8 +31,6 @@ export default class ShowNotes extends React.PureComponent {
     }
 
     render() {
-        if (this.props.notes?.length === 0) { return null }
-
         const iconStyle = { marginLeft: '2px' };
 
         return (
@@ -44,6 +42,9 @@ export default class ShowNotes extends React.PureComponent {
             }}>
                 <Typography variant="h5">
                     Notes you add will appear here
+                </Typography>
+                <Typography variant="subtitle1">
+                    Click on the waveform to add a note at that particular timestamp
                 </Typography>
 
                 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
