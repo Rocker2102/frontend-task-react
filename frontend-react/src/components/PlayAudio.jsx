@@ -97,8 +97,12 @@ export default class PlayAudio extends React.Component {
     };
 
     notesList = () => {
+        const emptyList = <div>No notes added for this audio!</div>;
+
         if (this.state.notes.length !== 0) {
             const notesList = this.state.notes.filter((note) => note.audioName === this.props.audioFile.name);
+
+            if (notesList.length === 0) { return emptyList }
 
             return (
                 <div>
@@ -109,7 +113,7 @@ export default class PlayAudio extends React.Component {
             );
         }
 
-        return <div>No notes added for this audio!</div>;
+        return emptyList;
     }
 
     componentDidMount () {
