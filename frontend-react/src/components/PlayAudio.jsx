@@ -15,6 +15,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUpOutlined';
 import VolumeOffIcon from '@mui/icons-material/VolumeOffOutlined';
 
 import TopMenu from './TopMenu';
+import ShowNotes from './ShowNotes';
 
 import WaveSurfer from 'wavesurfer.js';
 
@@ -134,23 +135,15 @@ export default class PlayAudio extends React.Component {
     };
 
     notesList = () => {
-        const emptyList = <div>No notes added for this audio!</div>;
-
         if (this.state.notes.length !== 0) {
             const notesList = this.state.notes.filter((note) => note.audioName === this.props.audioFile?.name);
 
-            if (notesList.length === 0) { return emptyList }
+            if (notesList.length === 0) { return [] }
 
-            return (
-                <div>
-                    {notesList.map(note => {
-                        return <div key={note.time}>{formatTime(note.time)} - {note.remark}</div>
-                    })}
-                </div>
-            );
+            return notesList;
         }
 
-        return emptyList;
+        return [];
     }
 
     handleVolumeChange = (e, value) => {
@@ -238,7 +231,7 @@ export default class PlayAudio extends React.Component {
                 <TopMenu title={this.props.audioFile?.name} />
 
                 <Container sx={{ marginTop: '2em' }}>
-                    <Paper elevation={0} sx={{ padding: '2em 1em', marginBottom: '1em' }}>
+                    <Paper elevation={0} sx={{ padding: '2em 1em 0.6em 1em' }}>
                         <Box sx={{
                             borderBottom: '1px solid black',
                             marginBottom: '2px'
@@ -246,7 +239,7 @@ export default class PlayAudio extends React.Component {
                             <div id="waveform"></div>
                         </Box>
 
-                        <div style={{ display: 'flex', jsutifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <div>00:00</div>
                             <div>
                                 { this.state.audio.currentTime == null
@@ -296,7 +289,7 @@ export default class PlayAudio extends React.Component {
                         </Grid>
                     </Grid>
 
-                    {this.notesList()}
+                    <ShowNotes notes={this.notesList()} />
                 </Container>
             </Box>
         );
