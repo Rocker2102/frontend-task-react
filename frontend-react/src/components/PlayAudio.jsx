@@ -3,6 +3,13 @@ import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
 
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -39,7 +46,7 @@ export default class PlayAudio extends React.Component {
     maxAudioSteps = 15;
     audioInterval = undefined;
 
-    constructor (props) {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -51,7 +58,10 @@ export default class PlayAudio extends React.Component {
                 isPlaying: false,
                 currentTime: null
             },
-            theme: 'light'
+            theme: 'light',
+            remark: '',
+            isNoteModalOpen: false,
+            modalOpenTimestamp: 0
         };
     }
 
@@ -66,12 +76,10 @@ export default class PlayAudio extends React.Component {
     toggleTheme = () => {
         if (this.state.theme === 'light') {
             this.setState({
-                ...this.state,
                 theme: 'dark'
             });
         } else {
             this.setState({
-                ...this.state,
                 theme: 'light'
             });
         }
@@ -84,23 +92,21 @@ export default class PlayAudio extends React.Component {
     }
 
     addNote = () => {
-        const remark = window.prompt('Enter Note: ');
+        this.handleNoteModalClose();
 
-        if (!remark || remark === '') { return }
+        if (this.state.remark === '') { return }
 
         this.setState({
-            ...this.state,
             notes: [
                 ...this.state.notes,
                 {
-                    time: PlayAudio.waveSurfer.getCurrentTime(),
-                    remark,
+                    time: this.state.modalOpenTimestamp,
+                    remark: this.state.remark,
                     audioName: this.props.audioFile?.name
                 }
-            ]
+            ],
+            remark: ''
         });
-
-        window.localStorage.setItem(this.lsKey, JSON.stringify(this.state.notes));
     }
 
     toggleMute = () => {
@@ -114,7 +120,6 @@ export default class PlayAudio extends React.Component {
 
         PlayAudio.waveSurfer.setMute(mute);
         this.setState({
-            ...this.state,
             audio: {
                 ...this.state.audio,
                 isMute: mute
@@ -130,7 +135,6 @@ export default class PlayAudio extends React.Component {
 
         if (PlayAudio.waveSurfer.isPlaying()) {
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     isPlaying: true
@@ -139,7 +143,6 @@ export default class PlayAudio extends React.Component {
 
             this.audioInterval = setInterval(() => {
                 this.setState({
-                    ...this.state,
                     audio: {
                         ...this.state.audio,
                         currentTime: PlayAudio.waveSurfer.getCurrentTime()
@@ -153,7 +156,6 @@ export default class PlayAudio extends React.Component {
         clearInterval(this.audioInterval);
 
         this.setState({
-            ...this.state,
             audio: {
                 ...this.state.audio,
                 isPlaying: false
@@ -182,7 +184,6 @@ export default class PlayAudio extends React.Component {
         });
 
         this.setState({
-            ...this.state,
             notes: newNotes
         });
 
@@ -204,7 +205,6 @@ export default class PlayAudio extends React.Component {
         PlayAudio.waveSurfer.setMute(false);
 
         this.setState({
-            ...this.state,
             audio: {
                 ...this.state.audio,
                 volume: value,
@@ -213,7 +213,26 @@ export default class PlayAudio extends React.Component {
         });
     }
 
-    componentDidMount () {
+    handleNoteModalClose = () => {
+        this.setState({
+            isNoteModalOpen: false
+        });
+    }
+
+    handleNoteModalOpen = () => {
+        this.setState({
+            isNoteModalOpen: true,
+            modalOpenTimestamp: PlayAudio.waveSurfer.getCurrentTime()
+        });
+    }
+
+    updateRemark = (e) => {
+        this.setState({
+            remark: e.target.value
+        });
+    }
+
+    componentDidMount() {
         PlayAudio.waveSurfer = WaveSurfer.create({
             container: '#waveform',
             waveColor: 'violet',
@@ -228,7 +247,6 @@ export default class PlayAudio extends React.Component {
             this.handleVolumeChange(null, this.state.audio.volume);
 
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     duration: PlayAudio.waveSurfer.getDuration(),
@@ -239,14 +257,13 @@ export default class PlayAudio extends React.Component {
 
         PlayAudio.waveSurfer.on('seek', () => {
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     currentTime: PlayAudio.waveSurfer.getCurrentTime()
                 }
             });
 
-            this.addNote();
+            this.handleNoteModalOpen();
         });
 
         PlayAudio.waveSurfer.on('error', () => {
@@ -257,7 +274,6 @@ export default class PlayAudio extends React.Component {
             console.log('Audio clip finished!');
 
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     isPlaying: false,
@@ -272,7 +288,16 @@ export default class PlayAudio extends React.Component {
         PlayAudio.waveSurfer?.destroy();
     }
 
-    render () {
+    componentDidUpdate (prevProps, prevState) {
+        if (typeof this.state.notes?.length === 'undefined' ||
+            typeof prevState.notes?.length === 'undefined') { return }
+
+        if (this.state.notes.length > prevState.notes.length) {
+            window.localStorage.setItem(this.lsKey, JSON.stringify(this.state.notes));
+        }
+    }
+
+    render() {
         return (
             <ThemeProvider theme={this.getTheme(this.state.theme)}>
                 <CssBaseline />
@@ -281,6 +306,29 @@ export default class PlayAudio extends React.Component {
                     <TopMenu title={this.props.audioFile?.name}
                         currentTheme={this.state.theme} toggleTheme={this.toggleTheme}
                     />
+
+                    <Dialog open={this.state.isNoteModalOpen}>
+                        <DialogTitle>Add New Note</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                margin='dense'
+                                id='reamrk'
+                                label='Remark'
+                                type='text'
+                                fullWidth
+                                variant='standard'
+                                value={this.state.remark}
+                                onChange={this.updateRemark}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button id="closeNoteModal" onClick={this.handleNoteModalClose} component="button">
+                                Cancel
+                            </Button>
+                            <Button onClick={() => this.addNote()}>Add Note</Button>
+                        </DialogActions>
+                    </Dialog>
 
                     <Container sx={{ marginTop: '2em', marginBottom: '20px' }}>
                         <Paper elevation={0} sx={{ padding: '2em 1em 0.6em 1em' }}>
@@ -294,9 +342,9 @@ export default class PlayAudio extends React.Component {
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <div>00:00</div>
                                 <div>
-                                    { this.state.audio.currentTime == null
+                                    {this.state.audio.currentTime == null
                                         ? 'Loading ...'
-                                        : this.displayTimer(this.state.audio.currentTime) }
+                                        : this.displayTimer(this.state.audio.currentTime)}
                                 </div>
                                 <div>
                                     {this.displayTimer(this.state.audio.duration, '00:00')}
@@ -304,7 +352,8 @@ export default class PlayAudio extends React.Component {
                             </div>
                         </Paper>
 
-                        <Grid container sx={{ display: 'flex',
+                        <Grid container sx={{
+                            display: 'flex',
                             justifyContent: 'space-between', alignItems: 'center',
                             padding: '0 1em',
                             marginBottom: '2em'

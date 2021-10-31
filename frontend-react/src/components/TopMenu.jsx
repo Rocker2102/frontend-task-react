@@ -11,10 +11,6 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 export default class TopMenu extends React.Component {
-    constructor (props) {
-        super(props);
-    }
-
     render () {
         return (
             <Box sx={{ flexGrow: 1 }}>
@@ -25,7 +21,7 @@ export default class TopMenu extends React.Component {
                                 size="large"
                                 edge="start"
                                 color="inherit"
-                                aria-label="menu"
+                                aria-label="back"
                                 sx={{ mr: 2 }}
                             >
                                 <ArrowBackIcon />
