@@ -104,7 +104,8 @@ export default class PlayAudio extends React.Component {
                     remark: this.state.remark,
                     audioName: this.props.audioFile?.name
                 }
-            ]
+            ],
+            remark: ''
         });
     }
 
