@@ -76,12 +76,10 @@ export default class PlayAudio extends React.Component {
     toggleTheme = () => {
         if (this.state.theme === 'light') {
             this.setState({
-                ...this.state,
                 theme: 'dark'
             });
         } else {
             this.setState({
-                ...this.state,
                 theme: 'light'
             });
         }
@@ -99,7 +97,6 @@ export default class PlayAudio extends React.Component {
         if (this.state.remark === '') { return }
 
         this.setState({
-            ...this.state,
             notes: [
                 ...this.state.notes,
                 {
@@ -122,7 +119,6 @@ export default class PlayAudio extends React.Component {
 
         PlayAudio.waveSurfer.setMute(mute);
         this.setState({
-            ...this.state,
             audio: {
                 ...this.state.audio,
                 isMute: mute
@@ -138,7 +134,6 @@ export default class PlayAudio extends React.Component {
 
         if (PlayAudio.waveSurfer.isPlaying()) {
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     isPlaying: true
@@ -147,7 +142,6 @@ export default class PlayAudio extends React.Component {
 
             this.audioInterval = setInterval(() => {
                 this.setState({
-                    ...this.state,
                     audio: {
                         ...this.state.audio,
                         currentTime: PlayAudio.waveSurfer.getCurrentTime()
@@ -161,7 +155,6 @@ export default class PlayAudio extends React.Component {
         clearInterval(this.audioInterval);
 
         this.setState({
-            ...this.state,
             audio: {
                 ...this.state.audio,
                 isPlaying: false
@@ -190,7 +183,6 @@ export default class PlayAudio extends React.Component {
         });
 
         this.setState({
-            ...this.state,
             notes: newNotes
         });
 
@@ -212,7 +204,6 @@ export default class PlayAudio extends React.Component {
         PlayAudio.waveSurfer.setMute(false);
 
         this.setState({
-            ...this.state,
             audio: {
                 ...this.state.audio,
                 volume: value,
@@ -223,14 +214,12 @@ export default class PlayAudio extends React.Component {
 
     handleNoteModalClose = () => {
         this.setState({
-            ...this.state,
             isNoteModalOpen: false
         });
     }
 
     handleNoteModalOpen = () => {
         this.setState({
-            ...this.state,
             isNoteModalOpen: true,
             modalOpenTimestamp: PlayAudio.waveSurfer.getCurrentTime()
         });
@@ -238,7 +227,6 @@ export default class PlayAudio extends React.Component {
 
     updateRemark = (e) => {
         this.setState({
-            ...this.state,
             remark: e.target.value
         });
     }
@@ -258,7 +246,6 @@ export default class PlayAudio extends React.Component {
             this.handleVolumeChange(null, this.state.audio.volume);
 
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     duration: PlayAudio.waveSurfer.getDuration(),
@@ -269,7 +256,6 @@ export default class PlayAudio extends React.Component {
 
         PlayAudio.waveSurfer.on('seek', () => {
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     currentTime: PlayAudio.waveSurfer.getCurrentTime()
@@ -287,7 +273,6 @@ export default class PlayAudio extends React.Component {
             console.log('Audio clip finished!');
 
             this.setState({
-                ...this.state,
                 audio: {
                     ...this.state.audio,
                     isPlaying: false,

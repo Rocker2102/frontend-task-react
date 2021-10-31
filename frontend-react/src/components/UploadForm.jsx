@@ -63,14 +63,12 @@ class UploadButton extends React.Component {
 
     handleFile = (e) => {
         this.setState({
-            ...this.state,
             file: e.target.files[0] ?? null
         });
     }
 
     removeFile = () => {
         this.setState({
-            ...this.state,
             file: null
         });
 

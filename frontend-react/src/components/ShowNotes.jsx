@@ -17,10 +17,6 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircleRounded';
 import { formatTime } from '../shared/utils';
 
 export default class ShowNotes extends React.PureComponent {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const iconStyle = { marginLeft: '2px' };
         const emptyList = <Typography variant="subtitle1" color="error"
