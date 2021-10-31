@@ -21,7 +21,7 @@ export default class TopMenu extends React.Component {
                                 size="large"
                                 edge="start"
                                 color="inherit"
-                                aria-label="menu"
+                                aria-label="back"
                                 sx={{ mr: 2 }}
                             >
                                 <ArrowBackIcon />
