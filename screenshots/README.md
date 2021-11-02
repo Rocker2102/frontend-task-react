@@ -1,15 +1,15 @@
 ### Dark Theme View
 
-![dark-theme-view](screenshots/darkThemeView.jpeg)
+![dark-theme-view](darkThemeView.jpeg)
 
 ### Light Theme View
 
-![light-theme-view](screenshots/lightThemeView.jpeg)
+![light-theme-view](lightThemeView.jpeg)
 
 ### Upload Form
 
-![upload-form-view](screenshots/uploadForm.jpeg)
+![upload-form-view](uploadForm.jpeg)
 
 ### File Selected View
 
-![file-selected-view](screenshots/fileSelected.jpeg)
+![file-selected-view](fileSelected.jpeg)
